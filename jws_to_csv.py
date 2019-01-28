@@ -1,4 +1,5 @@
-import io
+from tkinter.filedialog import askdirectory,askopenfilenames
+from os import chdir,listdir
 import OleFileIO_PL as ofio
 from struct import unpack
 
@@ -55,19 +56,6 @@ def _unpack_ole_jws_header(data):
     except:
         exit("Cannot read DataInfo")
 
-file4="sample_CD_HT_Abs.jws"
-file5="sample_CD_HT_Abs_2.jws"
-# DATAINFO_FMT = '<LLLLLLdddLLLLddddLLLLLLdddLLLLddd'
-# DATAINFO_FMT = '<LLLLLLdddLLLLLLdddLLLLLLdddLLdddd'
-# DATAINFO_FMT = '<LLLLLLdddLLLLLLddddLLddddLLdddd'
-# """                 ^ ^^^^      ^^^^  ^^^^  ^^^^     """
-#268435715 is separator or "wavelength" symbol. after first seperator comes the headers. Then each line comes the header.
-
-file1="sample_fluorescence.jws"
-file2="sample_fluorescence_2.jws"
-file3="sample_fluorescence_3.jws"
-# DATAINFO_FMT = '<LLLLLLdddLLLLdddd'
-
 
 def convert_jws_to_csv(filename):
     with open(filename,"rb") as f:
@@ -99,9 +87,16 @@ def convert_jws_to_csv(filename):
             r.write('\n')
         print("%s is created." %r.name)
 
-convert_jws_to_csv(file1)
-convert_jws_to_csv(file2)
-convert_jws_to_csv(file3)
-convert_jws_to_csv(file4)
-convert_jws_to_csv(file5)
+if __name__=="__main__":
+    folder=askdirectory(title="Select the folder containing .JWS files to be converted")
+    try:
+        chdir(folder)
+    except OSError:
+        exit("Cannot change current working directory.")
+
+    files_found= [x for x in listdir(folder) if x.lower().endswith(".jws")]
+    if files_found.__len__()==0: exit("No .JWS files found.")
+    for filename in files_found:
+        print(filename)
+        convert_jws_to_csv(filename)
 
