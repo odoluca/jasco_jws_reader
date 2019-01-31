@@ -1,7 +1,10 @@
-from tkinter.filedialog import askdirectory,askopenfilenames
-from os import chdir,listdir
+#Works only on python 2+due to OleFileIO_PL module
+from tkFileDialog import askdirectory,askopenfilenames
+from os import chdir, listdir
 import OleFileIO_PL as ofio
 from struct import unpack
+
+
 
 def data_definitions(x):
     return {
